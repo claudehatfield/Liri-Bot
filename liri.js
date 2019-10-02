@@ -15,7 +15,7 @@ var defaultMovie = "Mr. Nobody";
 var action = process.argv[2];
 var value = process.argv[3];
 
-getBands();
+
 function getBands(artist) {
   // var artist = value;
   axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
@@ -25,5 +25,28 @@ function getBands(artist) {
       var eventDate = moment(response.data[0].datetime).format('MM/DD/YYYY');
       console.log("Date of the Event:", eventDate);
     })
+    
+}
+
+function getSongs(songName) {
+  
+
+  
+  if (songName === "") {
+    songName = "I Saw the Sign";
+  }
+
+  spotify.search({ type: 'track', query: songName }, function (err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+
+    //Artist(s)
+    console.log("Artists: ", data.tracks.items[0].album.artists[0].name)
+    // A preview link of the song from Spotify
+    console.log("Preview Link: ", data.tracks.items[0].preview_url)
+    // The album that the song is from
+    console.log("Album Name: ", data.tracks.items[0].album.name)
+  });
 }
 
