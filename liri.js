@@ -8,7 +8,27 @@ var Spotify = require('node-spotify-api');
 var fs = require("fs");
 var defaultMovie = "Mr. Nobody";
 
-
+switch (action) {
+  case "concert-this":
+    getBands(value)
+    break;
+  case "spotify-this-song":
+   
+    getSongs(value)
+    break;
+  case "movie-this":
+    
+    if (value == "") {
+      value = defaultMovie;
+    }
+    getMovies(value)
+    break;
+  case "do-what-it-says":
+    doWhatItSays()
+    break;
+  default:
+    break;
+}
 
 
 
