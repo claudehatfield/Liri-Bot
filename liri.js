@@ -6,12 +6,14 @@ var axios = require('axios');
 var keys = require("./keys.js");
 var spotify = new Spotify(keys.spotify);
 var moment = require("moment");
-var Spotify = require('node-spotify-api');
 var fs = require("fs");
 var defaultMovie = "Mr. Nobody";
 
 
 // statement for what the user chooses to do
+var action = process.argv[2];
+var value = process.argv[3];
+
 switch (action) {
   case "concert-this":
     getBands(value)
@@ -21,7 +23,7 @@ switch (action) {
     getSongs(value)
     break;
   case "movie-this":
-
+    //If user has not specified a movie , use default
     if (value == "") {
       value = defaultMovie;
     }
@@ -34,12 +36,7 @@ switch (action) {
     break;
 }
 
-
-
-var action = process.argv[2];
-var value = process.argv[3];
-
-// axios.get for artist events comming up.
+// function to get data back on artist
 function getBands(artist) {
 
   axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
@@ -52,7 +49,7 @@ function getBands(artist) {
 
 }
 
-/// getting song infomation
+// function to get data back on song
 function getSongs(songName) {
 
   if (songName === "") {
@@ -67,46 +64,53 @@ function getSongs(songName) {
       return console.log('Error occurred: ' + err);
     }
 
-    //Artist(s)
+
+
     console.log("Artists: ", data.tracks.items[0].album.artists[0].name)
-    // A preview link of the song from Spotify
+
     console.log("Preview Link: ", data.tracks.items[0].preview_url)
-    // The album that the song is from
+
     console.log("Album Name: ", data.tracks.items[0].album.name)
   });
 }
 
-// getting movie infomation
+//function to get info back on movie title
 function getMovies(movieName) {
-  axios.get("http://www.omdbapi.com/?apikey=7c351551=" + movieName)
+  // var movieName = value;
+  axios.get("http://www.omdbapi.com/?t=" + movieName + "&apikey=7c351551")
     .then(function (data) {
-      var results = `
-      Title of the movie: ${data.data.Title}
-      Year the movie came out: ${data.data.Year}
-      IMDB Rating of the movie: ${data.data.Rated}
-      Rotten Tomatoes Rating of the movie: ${data.data.Ratings[1].Value}
-      Country where the movie was produced: ${data.data.Country}
-      Language of the movie: ${data.data.Language}
-      Plot of the movie: ${data.data.Plot}
-      Actors in the movie: ${data.data.Actors}`;
-      console.log(results)
+
+      var results = '------------------------\n' +
+        'Movie Information:\n' +
+        '------------------------\n\n' +
+        'Movie Title: ' + data.data.Title + '\n' +
+        'Year Released: ' + data.data.Released + '\n' +
+        'IMBD Rating: ' + data.data.imdbRating + '\n' +
+        'Rotten Tomatoes Rating: ' + data.data.tomatoRating + '\n' +
+        'Country Produced: ' + data.data.Country + '\n' +
+        'Language: ' + data.data.Language + '\n' +
+        'Plot: ' + data.data.Plot + '\n' +
+        'Actors: ' + data.data.Actors + '\n';
+      console.log(results);
     })
 
 
+
+
+  //Response if user does not type in a movie title
   if (movieName === "Mr. Nobody") {
     console.log("-----------------------");
     console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
-    console.log("It's on Netflix!");
   };
 }
 
-/// gets data from the txt file and does what it says
+// pulls info out of random.txt
 function doWhatItSays() {
   fs.readFile("random.txt", "utf8", function (err, data) {
     data = data.split(",");
     var action = data[0]
     var value = data[1]
-    
+    // getSongs(value)
     switch (action) {
       case "concert-this":
         getBands(value)
