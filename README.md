@@ -11,4 +11,5 @@ The app will take in 4 commands
 
 Concert-this 
 
-![Alt text](./assests/concertThis.png?raw=true )
+![Image](../Liri-Bot/assests/concertThis.PNG?raw=true)
+
